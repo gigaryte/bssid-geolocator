@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-import os
-import sys
-import json
 import logging
 import argparse
 import requests
@@ -18,9 +15,10 @@ def geolocateApple(bssid):
     '''
     @brief: Attempts to geolocate a BSSID using the Apple location services API
     @param: bssid: the BSSID to attempt to geolocate
-    @returns: (lat,lon) tuple of floats
+    @returns: list of (bssid, lat,lon, channel, horizontal_accuray) tuples
 
-    @notes: much of this code borrowed from iSniff-GPS, who borrowed it from 
+    @notes: much of this code borrowed from iSniff-GPS, who borrowed it from:
+
     Mostly taken from paper by François-Xavier Aguessy and Côme Demoustier
     http://fxaguessy.fr/rapport-pfe-interception-ssl-analyse-donnees-localisation-smartphones/
     '''
@@ -47,16 +45,21 @@ def geolocateApple(bssid):
     geos = []
 
     for wifi in bssidResponse.wifi:
-        #Skip any BSSIDs Apple returns that aren't the one we requested
         #Need to normalize each MAC byte because the string representation will
         #strip out leading 0s for some reason. So for e.g., need to turn 
         # 0:11:22:33:44:55
         # into 00:11:22:33:44:55
+        
+        #BSSID
         paddedBSSID = ":".join("0" + x if len(x) == 1 else x for x in
                 wifi.bssid.split(":"))
+        #latitude 
         lat = wifi.location.lat * pow(10,-8) 
+        #longitude
         lon = wifi.location.lon * pow(10,-8)
+        #wi-fi channel
         channel = wifi.channel
+        #horizontal accuracy (m)
         hacc = wifi.location.hacc
 
         geos.append((paddedBSSID, f"{lat},{lon}", channel, hacc))
