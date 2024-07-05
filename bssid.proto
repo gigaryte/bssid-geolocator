@@ -1,0 +1,28 @@
+syntax="proto2";
+
+package bssid;
+
+message Location {
+    optional int64 lat = 1;
+    optional int64 lon = 2;
+    optional int32 hacc = 3; 
+    optional int32 zero = 4; 
+    optional int32 altitude = 5; 
+    optional int32 vacc = 6; 
+    optional int32 unk1 = 7;
+    optional int32 unk2 = 8;
+}
+
+message BSSIDGeo { 
+    required string bssid = 1; 
+    optional Location location = 2; 
+    optional int32 channel = 21; 
+}
+
+message WiFiLocation {
+    optional int64 unk1 = 1; 
+    repeated BSSIDGeo wifi = 2; 
+    optional int32 noise = 3; 
+    optional int32 single = 4; 
+    optional string APIName = 5;
+}
