@@ -4,7 +4,10 @@ import argparse
 import requests
 import bssid_pb2
 import simplekml
+import logging
 from urllib3.exceptions import InsecureRequestWarning
+
+logging.basicConfig(level=logging.INFO)
 
 #suppress certificate warnings for hitting Apple's location services API
 #endpoint
@@ -88,29 +91,58 @@ def writeKML(locations, fname):
 
         point = kml.newpoint(name=bssid, description=f"{bssid}",
                 coords=[(lon, lat)])
-
+        
     kml.save(fname)
-
     return None
+
+def get_bssids_from_file(fname):
+    '''
+    @brief: Reads in a file of BSSIDs and returns them as a list
+    @param: fname: the filename to read
+    @returns: list of BSSIDs
+    '''
+
+    bssids = set()
+
+    with open(fname, 'r') as f:
+        for line in f:
+            bssids.add(line.strip())
+
+    return bssids
 
 def main(args):
 
-    locations = {}
+    # Single BSSID mode
+    if args.bssid:
+        #Single bssid geolocation requested
+        locations = geolocateApple(args.bssid)
+    # Batch mode
+    elif args.infile:
+        bssids = get_bssids_from_file(args.infile)
 
-    #Single bssid geolocation requested
-    locations = geolocateApple(args.bssid)
-
-    for location in locations:
-        print(f"{' '.join([str(x) for x in location])}")
-
+        locations = set()
+        # Iterate the bssids
+        for bssid in bssids:
+            bssid_locations = geolocateApple(bssid)
+            # Iterate the returned locations
+            for location in bssid_locations:
+                locations.add(location)
     if args.kml:
         writeKML(locations, args.kml)
-
+    elif args.outfile:
+        with open(args.outfile, 'w') as f:
+            for location in locations:
+                f.write(f"{'\t'.join([str(x) for x in location])}\n")
+    else:
+        for location in locations:
+            print(f"{' '.join([str(x) for x in location])}")
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("bssid", help="Single BSSID to geo")
+    parser.add_argument("-b", "--bssid", help="Single BSSID to geo")
+    parser.add_argument("-f", "--infile", help="File of BSSIDs to geo")
     parser.add_argument("-k", "--kml", help="Output KML filename")
+    parser.add_argument("-o", "--outfile", help="Write output to TSV file")
     args = parser.parse_args()
 
     main(args)
