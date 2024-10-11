@@ -127,12 +127,17 @@ def main(args):
             # Iterate the returned locations
             for location in bssid_locations:
                 locations.add(location)
+    else:
+        logging.error(f"Neither a BSSID nor infile were provided")
+        exit(-1)
+
     if args.kml:
         writeKML(locations, args.kml)
     elif args.outfile:
         with open(args.outfile, 'w') as f:
             for location in locations:
-                f.write(f"{'\t'.join([str(x) for x in location])}\n")
+                line = '\t'.join([str(x) for x in location])
+                f.write(f"{line}\n")
     else:
         for location in locations:
             print(f"{' '.join([str(x) for x in location])}")
