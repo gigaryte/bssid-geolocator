@@ -18,7 +18,7 @@ def geolocateApple(bssid):
     '''
     @brief: Attempts to geolocate a BSSID using the Apple location services API
     @param: bssid: the BSSID to attempt to geolocate
-    @returns: list of (bssid, lat,lon, channel, horizontal_accuray) tuples
+    @returns: list of (bssid, lat,lon, channel, horizontal_accuracy) tuples
 
     @notes: much of this code borrowed from iSniff-GPS, who borrowed it from:
 
