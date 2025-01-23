@@ -21,7 +21,20 @@ produces all the geolocations to stdout. It can also write KML.
 Produces output like:
 
 ```
-<unix ts> <bssid> <lat,lon> <channel> <horizonal accuracy>
+<bssid> <lat,lon> <channel> <horizonal accuracy>
+```
+
+You can also geolocate several BSSIDs from a file with `-f`:
+
+```bash
+./bssid-geolocator.py -f file-o-bssids.txt
+```
+
+You can write the output to a file with `-o`, which produces a tsv for easy
+`cut`ing:
+
+```bash
+./bssid-geolocator.py -f file-o-bssids.txt -o geos.tsv
 ```
 
 You can also write KML with `-k`:
