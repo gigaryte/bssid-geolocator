@@ -8,6 +8,14 @@ source bin/activate
 pip install -r requirements.txt
 ```
 
+To run this on Nix, do:
+```
+nix-shell
+[nix-shell:~/Downloads/bssid-geolocator]$ ./bssid-geolocator.py --bssid 00:11:22:33:44:55
+INFO:root:Geolocating bssid 00:11:22:33:44:55
+00:11:22:33:44:55 -180.0,-180.0 0 -1
+```
+
 `bssid-geolocator` is very simple. It takes one BSSID as an argument, and
 produces all the geolocations to stdout. It can also write KML.
 
@@ -15,7 +23,7 @@ produces all the geolocations to stdout. It can also write KML.
 ## Examples
 
 ```bash
-./bssid-geolocator.py -b 00:11:22:33:44:55 
+./bssid-geolocator.py -b 00:11:22:33:44:55
 ```
 
 Produces output like:
@@ -40,7 +48,7 @@ You can write the output to a file with `-o`, which produces a tsv for easy
 You can also write KML with `-k`:
 
 ```bash
-./bssid-geolocator.py -k output.kml -b 00:11:22:33:44:55 
+./bssid-geolocator.py -k output.kml -b 00:11:22:33:44:55
 ```
 
 There's also a help menu, if you forget all of this:
