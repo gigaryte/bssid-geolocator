@@ -51,6 +51,30 @@ You can also write KML with `-k`:
 ./bssid-geolocator.py -k output.kml -b 00:11:22:33:44:55
 ```
 
+You can output results in JSON format with `--json` (useful for scripting and integration):
+
+```
+./bssid-geolocator.py -b 00:11:22:33:44:55 --json
+
+```
+
+Sample output:
+
+```
+[
+  {
+    "bssid": "00:11:22:33:44:55",
+    "lat": 14.4463227,
+    "lon": 26.0369489,
+    "channel": 3,
+    "accuracy": 24
+  }
+]
+
+```
+
+> ℹ️ The `--json` flag disables all console logs for clean machine-readable output.
+
 There's also a help menu, if you forget all of this:
 
 ```bash
